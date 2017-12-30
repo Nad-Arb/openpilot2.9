@@ -62,7 +62,7 @@ class CarController(object):
     if not enabled:
       final_gas = 0.
       final_brake = 0.
-      final_steer = 0.
+ #    final_steer = 0.
       # send pcm acc cancel cmd if drive is disabled but pcm is still on, or if the system can't be activated
       if CS.pcm_acc_status:
         pcm_cancel_cmd = True
@@ -135,7 +135,7 @@ class CarController(object):
 
     # *** exit from controls state on cancel, gas, or brake ***
     if (CS.cruise_buttons == CruiseButtons.CANCEL or CS.brake_pressed or
-        CS.user_gas_pressed or (CS.pedal_gas > 0 and CS.brake_only)) and self.controls_allowed:
+        CS.user_gas_pressed or (CS.pedal_gas > 0 or CS.brake_only)) and self.controls_allowed:
       print "CONTROLS ARE DEAD"
       self.controls_allowed = False
 

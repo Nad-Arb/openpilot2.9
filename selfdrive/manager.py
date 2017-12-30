@@ -27,7 +27,7 @@ from selfdrive.loggerd.config import ROOT
 managed_processes = {
   "uploader": "selfdrive.loggerd.uploader",
   "controlsd": "selfdrive.controls.controlsd",
-  "radard": "selfdrive.controls.radard",
+#  "radard": "selfdrive.controls.radard",
   "calibrationd": "selfdrive.calibrationd.calibrationd",
   "loggerd": "selfdrive.loggerd.loggerd",
   "logmessaged": "selfdrive.logmessaged",
@@ -45,7 +45,7 @@ unkillable_processes = ['visiond']
 # processes to end with SIGINT instead of SIGTERM
 interrupt_processes = ['loggerd']
 
-car_started_processes = ['controlsd', 'loggerd', 'sensord', 'radard', 'calibrationd', 'visiond']
+car_started_processes = ['controlsd', 'loggerd', 'sensord', 'calibrationd', 'visiond']
 
 
 # ****************** process management functions ******************

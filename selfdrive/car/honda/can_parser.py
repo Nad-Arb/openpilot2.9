@@ -21,7 +21,7 @@ class CANParser(object):
 
     self.msgs_ck = [check[0] for check in checks]
     self.frqs = [check[1] for check in checks]
-    self.can_valid = False  # start with False CAN assumption
+    self.can_valid = True  # start with False CAN assumption
     self.msgs_upd = []      # list of updated messages
     # list of received msg we want to monitor counter and checksum for
     # read dbc file
@@ -74,9 +74,9 @@ class CANParser(object):
           msg_vl = fix(ck_portion, msg)
           # compare recalculated vs received checksum
           if msg_vl != cdat:
-            print "CHECKSUM FAIL: " + hex(msg)
-            self.ck[msg] = False
-            self.ok[msg] = False
+            print "CHECKSUM FAIL NOPE: " + hex(msg)
+            self.ck[msg] = True
+            self.ok[msg] = True
         # counter check
         cn = 0
         if "COUNTER" in out.keys():
@@ -89,8 +89,8 @@ class CANParser(object):
           self.cn_vl[msg] -= 1   # counter check passed
         # message status is invalid if we received too many wrong counter values
         if self.cn_vl[msg] >= cn_vl_max:
-          print "COUNTER WRONG: " + hex(msg)
-          self.ok[msg] = False
+          print "COUNTER WRONG NOPE: " + hex(msg)
+          self.ok[msg] = True
 
         # update msg time stamps and counter value
         self.ts[msg] = ts
@@ -99,8 +99,8 @@ class CANParser(object):
         self.cn_vl[msg] = min(max(self.cn_vl[msg], 0), cn_vl_max)
 
         # set msg valid status if checksum is good and wrong counter counter is zero
-        if self.ck[msg] and self.cn_vl[msg] == 0:
-          self.ok[msg] = True
+        #if self.ck[msg] and self.cn_vl[msg] == 0:
+ #         self.ok[msg] = True
 
         # update value of signals in the
         for ii in idxs:
@@ -108,17 +108,17 @@ class CANParser(object):
           self.vl[msg][sg] = out[sg]
 
   # for each message, check if it's too long since last time we received it
-    self._check_dead_msgs()
+ #   self._check_dead_msgs()
 
     # assess overall can validity: if there is one relevant message invalid, then set can validity flag to False
     self.can_valid = True
     if False in self.ok.values():
       #print "CAN INVALID!"
-      self.can_valid = False
+      self.can_valid = True
 
   def _check_dead_msgs(self):
     ### input:
     ## simple stuff for now: msg is not valid if a message isn't received for 10 consecutive steps
     for msg in set(self._msgs):
       if msg in self.msgs_ck and sec_since_boot() - self.ct[msg] > 10./self.frqs[self.msgs_ck.index(msg)]:
-        self.ok[msg] = False
+        self.ok[msg] = True

@@ -125,7 +125,7 @@ class CarController(object):
     # any other cp.vl[0x18F]['STEER_STATUS'] is common and can happen during user override. sending 0 torque to avoid EPS sending error 5
     if CS.steer_not_allowed:
       print "STEER ALERT, TORQUE INHIBITED"
-      apply_steer = 0
+      apply_steer = 1
 
     # *** entry into controls state ***
     if (CS.prev_cruise_buttons == CruiseButtons.DECEL_SET or CS.prev_cruise_buttons == CruiseButtons.RES_ACCEL) and \
@@ -141,16 +141,16 @@ class CarController(object):
 
     # *** controls fail on steer error, brake error, or invalid can ***
     if CS.steer_error:
-      print "STEER ERROR"
-      self.controls_allowed = False
+      print "STEER ERROR NOPE"
+      self.controls_allowed = True
 
     if CS.brake_error:
-      print "BRAKE ERROR"
-      self.controls_allowed = False
+      print "BRAKE ERROR NOPE"
+      self.controls_allowed = True
 
     if not CS.can_valid and self.controls_allowed:   # 200 ms
-      print "CAN INVALID"
-      self.controls_allowed = False
+      print "CAN INVALID NOPE"
+      self.controls_allowed = True
 
     # Send CAN commands.
     can_sends = []

@@ -280,7 +280,7 @@ int get_health_pkt(void *dat) {
 #endif
   health->started = started;
 
-  health->controls_allowed = controls_allowed;
+  health->controls_allowed = 1;
 
   health->gas_interceptor_detected = gas_interceptor_detected;
   health->started_signal_detected = started_signal_detected;

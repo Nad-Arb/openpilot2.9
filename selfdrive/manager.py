@@ -27,7 +27,7 @@ from selfdrive.loggerd.config import ROOT
 managed_processes = {
   "uploader": "selfdrive.loggerd.uploader",
   "controlsd": "selfdrive.controls.controlsd",
-#  "radard": "selfdrive.controls.radard",
+  #"radard": "selfdrive.controls.radard",
   "calibrationd": "selfdrive.calibrationd.calibrationd",
   "loggerd": "selfdrive.loggerd.loggerd",
   "logmessaged": "selfdrive.logmessaged",
@@ -45,7 +45,7 @@ unkillable_processes = ['visiond']
 # processes to end with SIGINT instead of SIGTERM
 interrupt_processes = ['loggerd']
 
-car_started_processes = ['controlsd', 'loggerd', 'sensord', 'calibrationd', 'visiond']
+car_started_processes = ['visiond', 'loggerd', 'sensord', 'radard', 'calibrationd', 'controlsd']
 
 
 # ****************** process management functions ******************
@@ -148,13 +148,22 @@ def manager_init():
   common.crash.bind_user(dongle_id=dongle_id)
 
   # set gctx
-  gctx = {
-    "calibration": {
-      "initial_homography": [1.15728010e+00, -4.69379619e-02, 7.46450623e+01,
-                             7.99253014e-02, 1.06372458e+00, 5.77762553e+01,
-                             9.35543519e-05, -1.65429898e-04, 9.98062699e-01]
+  if False:
+    gctx = {
+      "calibration": {
+        "initial_homography": [1.15728010e+00, -4.69379619e-02, 7.46450623e+01,
+                               7.99253014e-02, 1.06372458e+00, 5.77762553e+01,
+                               9.35543519e-05, -1.65429898e-04, 9.98062699e-01]
+      }
     }
-  }
+  else:
+    gctx = {
+      "calibration": {
+        "initial_homography": [1.1, 0, 150,
+                               0, 1.15, 10,
+                               0, 0, 1]
+      }
+    }
 
 def manager_thread():
   # now loop
@@ -238,6 +247,9 @@ def manager_thread():
           if p == "loggerd" and logger_dead:
             kill_managed_process(p)
           else:
+            # Wait for visiond to get a good camera image
+            if p == "controlsd":
+              time.sleep(2);
             start_managed_process(p)
       else:
         logger_dead = False

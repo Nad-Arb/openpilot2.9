@@ -314,8 +314,8 @@ def controlsd_thread(gctx, rate=100):  #rate in Hz
     cc_send = messaging.new_message()
     cc_send.init('carControl')
     cc_send.carControl = CC    # copy?
-    #carcontrol.send(cc_send.to_bytes())
-    sendcan.send(cc_send.to_bytes())
+    carcontrol.send(cc_send.to_bytes())
+    #sendcan.send(cc_send.to_bytes())
 
     prof.checkpoint("CarControl")
 

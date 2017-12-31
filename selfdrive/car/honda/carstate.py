@@ -164,7 +164,11 @@ def fingerprint(logcan):
 class CarState(object):
   def __init__(self, logcan):
     self.torque_mod = False
-    self.brake_only, self.car_type = fingerprint(logcan)
+    
+    self.brake_only = False
+    # self.brake_only, self.car_type = fingerprint(logcan)
+    # self.car_type = "HONDA CIVIC 2016 TOURING"
+    self.car_type = "ACURA ILX 2016 ACURAWATCH PLUS"
 
     # assuming if you have a pedal interceptor you also have a torque mod
     if not self.brake_only:
